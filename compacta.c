@@ -4,7 +4,7 @@
 #include "lista.h"
 
 Arv *arv_huffman(char *filename) {
-    int pesos[256] = { 0 };
+    int pesos[256] = { 0 };         // vetor de pesos (sugerido na Dica 1)
 
     FILE *fp;
     char c;
@@ -12,6 +12,8 @@ Arv *arv_huffman(char *filename) {
         printf("Erro na abertura do arquivo %s\n", filename);
         return NULL;
     }
+
+    // Preenchimento do vetor de pesos
     while ((c = fgetc(fp)) != EOF)
         pesos[(int)c]++;
     fclose(fp);
@@ -22,6 +24,7 @@ Arv *arv_huffman(char *filename) {
         if(peso > maior_peso)
             maior_peso = peso;
 
+    // Cria a lista ordenada de nós com os caracteres
     TipoLista *lista_arvores = InicializaLista();
     int j;
     for(i=1; i<=maior_peso; i++)
@@ -29,6 +32,7 @@ Arv *arv_huffman(char *filename) {
             if(pesos[j] == i)
                 Insere(arv_cria((char)j, i, NULL, NULL), lista_arvores);
 
+    // Junta os nós para formar a árvore de Huffman
     Arv *nova, *a1, *a2;
     int novo_peso;
     while(!unico(lista_arvores)) {
