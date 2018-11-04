@@ -103,3 +103,20 @@ int unico(TipoLista *lista) {
         return 1;
     return 0;
 }
+
+void Insere_ordenado (Arv *a, TipoLista* lista) {
+    Celula *cel = (Celula *) malloc(sizeof(Celula));
+    cel->arv = a;
+    Celula *aux;
+    if(lista->prim == NULL) {
+        lista->prim = cel;
+        lista->ult = cel;
+        cel->prox = NULL;
+    }
+    else {
+        for(aux=lista->prim; aux->prox != NULL && get_peso(aux->prox->arv)<=get_peso(a); aux=aux->prox) {
+        }
+        cel->prox = aux->prox;
+        aux->prox = cel;
+    }
+}

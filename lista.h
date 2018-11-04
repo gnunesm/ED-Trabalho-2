@@ -54,4 +54,6 @@ int unico(TipoLista *lista);
 
 Arv* Pop (TipoLista* lista);
 
+void Insere_ordenado (Arv* a, TipoLista* lista);
+
 #endif /* LISTA_H_ */

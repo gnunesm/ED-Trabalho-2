@@ -18,19 +18,11 @@ Arv *arv_huffman(char *filename) {
         pesos[(int)c]++;
     fclose(fp);
 
-    int maior_peso = 0;
-    int peso, i;
-    for (i=0; i<256; i++)
-        if(pesos[i] > maior_peso)
-            maior_peso = pesos[i];
-
     // Cria a lista ordenada de nós com os caracteres
     TipoLista *lista_arvores = InicializaLista();
-    int j;
-    for(i=1; i<=maior_peso; i++)
-        for(j=0; j<256; j++)
-            if(pesos[j] == i)
-                Insere(arv_cria((char)j, i, NULL, NULL), lista_arvores);
+    for(int i=0; i<256; i++)
+        if(pesos[i] != 0)
+            Insere_ordenado(arv_cria((char)i, pesos[i], NULL, NULL), lista_arvores);
 
     // Junta os nós para formar a árvore de Huffman
     Arv *nova, *a1, *a2;
@@ -39,7 +31,7 @@ Arv *arv_huffman(char *filename) {
         a1 = Pop(lista_arvores);
         a2 = Pop(lista_arvores);
         nova = arv_cria((char)0, get_peso(a1)+get_peso(a2), a1, a2);
-        Insere(nova, lista_arvores);
+        Insere_ordenado(nova, lista_arvores);
     }
     Libera(lista_arvores);
     return nova;
