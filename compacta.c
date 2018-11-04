@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "arvore.h"
 #include "lista.h"
+#include "bitmap.h"
 
 Arv *arv_huffman(char *filename) {
     int pesos[256] = { 0 };         // vetor de pesos (sugerido na Dica 1)
@@ -37,6 +38,26 @@ Arv *arv_huffman(char *filename) {
     return nova;
 }
 
+void preenche_tabela(bitmap *tabela, Arv *a, bitmap b) {
+    if(!arv_vazia(a)) {
+        if(folha(a))
+            for (int i=0; i<bitmapGetLength(b); i++)
+		        bitmapAppendLeastSignificantBit(tabela+info(a), bitmapGetBit(b, i));
+        else {
+            bitmap b2 = bitmapInit(8);
+            for (int i=0; i<bitmapGetLength(b); i++)
+		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
+            bitmapAppendLeastSignificantBit(&b2, 0);
+            preenche_tabela(tabela, get_sae(a), b2);
+            b2 = bitmapInit(8);
+            for (int i=0; i<bitmapGetLength(b); i++)
+		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
+            bitmapAppendLeastSignificantBit(&b2, 1);
+            preenche_tabela(tabela, get_sad(a), b2);
+        }
+    }
+}
+
 int main(int argc, char** argv) {
     
     if(argc < 2) {
@@ -45,6 +66,12 @@ int main(int argc, char** argv) {
     }
 
     Arv *huff = arv_huffman(argv[1]);
+
+    bitmap tabela[256];
+    bitmap aux = bitmapInit(8);
+    for(int i=0; i<256; i++)
+        tabela[i] = bitmapInit(8);
+    preenche_tabela(tabela, huff, aux);
 
     return 0;
 }

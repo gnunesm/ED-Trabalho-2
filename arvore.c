@@ -117,3 +117,17 @@ Arv *arv_libera (Arv* a) {
 int get_peso (Arv *a) {
     return a->peso;
 }
+
+int folha(Arv *a) {
+    if(a->sae==NULL && a->sae==NULL)
+        return 1;
+    return 0;
+}
+
+Arv *get_sae(Arv *a) {
+    return a->sae;
+}
+
+Arv *get_sad(Arv *a) {
+    return a->sad;
+}
