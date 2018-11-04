@@ -13,9 +13,10 @@ Arv *arv_criavazia (void) {
     return NULL;
 }
 
-Arv *arv_cria (char c, Arv* e, Arv* d) {
+Arv *arv_cria (char c, int peso, Arv* e, Arv* d) {
     Arv *arvore = (Arv *) malloc(sizeof(Arv));
     arvore->c = c;
+    arvore->peso = peso;
     arvore->sae = e;
     arvore->sad = d;
     return arvore;
@@ -25,7 +26,7 @@ void imprime_aux(Arv *a) {
     if(arv_vazia(a))
         printf("<>");
     else {
-        printf("<%c", a->c);
+        printf("<%c%d", a->c, a->peso);
         imprime_aux(a->sae);
         imprime_aux(a->sad);
         printf(">");
@@ -34,9 +35,9 @@ void imprime_aux(Arv *a) {
 
 void arv_imprime (Arv* a) {
     if(arv_vazia(a))
-        printf("<>");
+        printf("<>\n");
     else {
-        printf("<%c", a->c);
+        printf("<%c%d", a->c, a->peso);
         imprime_aux(a->sae);
         imprime_aux(a->sad);
         printf(">\n");
