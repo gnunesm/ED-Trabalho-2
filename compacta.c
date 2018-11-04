@@ -20,9 +20,9 @@ Arv *arv_huffman(char *filename) {
 
     int maior_peso = 0;
     int peso, i;
-    for (peso=pesos[i]; i<256; i++)
-        if(peso > maior_peso)
-            maior_peso = peso;
+    for (i=0; i<256; i++)
+        if(pesos[i] > maior_peso)
+            maior_peso = pesos[i];
 
     // Cria a lista ordenada de nós com os caracteres
     TipoLista *lista_arvores = InicializaLista();

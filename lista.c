@@ -23,16 +23,19 @@ TipoLista* InicializaLista() {
     return lista;
 }
 
+
+// Insere no final
 void Insere (Arv *a, TipoLista* lista) {
     Celula *cel = (Celula *) malloc(sizeof(Celula));
     cel->arv = a;
+    cel->prox = NULL;
     if(lista->prim == NULL) {
         lista->prim = cel;
         lista->ult = cel;
     }
     else {
-        cel->prox = lista->prim;
-        lista->prim = cel;
+        lista->ult->prox = cel;
+        lista->ult = cel;
     }
 }
 
