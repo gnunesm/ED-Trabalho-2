@@ -40,4 +40,10 @@ int get_peso (Arv *a);
 //retorna a altura da arvore
 int altura (Arv* a);
 
+int folha(Arv *a);
+
+Arv *get_sae(Arv *a);
+
+Arv *get_sad(Arv *a);
+
 #endif /* ARVORE_H_ */
