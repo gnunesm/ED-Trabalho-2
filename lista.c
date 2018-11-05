@@ -114,9 +114,15 @@ void Insere_ordenado (Arv *a, TipoLista* lista) {
         cel->prox = NULL;
     }
     else {
-        for(aux=lista->prim; aux->prox != NULL && get_peso(aux->prox->arv)<=get_peso(a); aux=aux->prox) {
+        if(get_peso(lista->prim->arv) <= get_peso(a)) {
+            for(aux=lista->prim; aux->prox != NULL && get_peso(aux->prox->arv)<=get_peso(a); aux=aux->prox) {
+            }
+            cel->prox = aux->prox;
+            aux->prox = cel;
         }
-        cel->prox = aux->prox;
-        aux->prox = cel;
+        else {
+            cel->prox = lista->prim;
+            lista->prim = cel;
+        }
     }
 }
