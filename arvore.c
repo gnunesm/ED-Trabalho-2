@@ -119,7 +119,7 @@ int get_peso (Arv *a) {
 }
 
 int folha(Arv *a) {
-    if(a->sae==NULL && a->sae==NULL)
+    if(a->sae==NULL && a->sad==NULL)
         return 1;
     return 0;
 }
