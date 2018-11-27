@@ -3,7 +3,7 @@
 #include "arvore.h"
 
 struct arv {
-    char c;
+    unsigned char c;
     int peso;
     Arv *sae;
     Arv *sad;
@@ -13,7 +13,7 @@ Arv *arv_criavazia (void) {
     return NULL;
 }
 
-Arv *arv_cria (char c, int peso, Arv* e, Arv* d) {
+Arv *arv_cria (unsigned char c, int peso, Arv* e, Arv* d) {
     Arv *arvore = (Arv *) malloc(sizeof(Arv));
     arvore->c = c;
     arvore->peso = peso;
@@ -44,14 +44,14 @@ void arv_imprime (Arv* a) {
     }
 }
 
-int arv_pertence (Arv* a, char c) {
+int arv_pertence (Arv* a, unsigned char c) {
     if(arv_vazia(a))
         return 0;
     else
         return a->c==c || arv_pertence(a->sae, c) || arv_pertence(a->sad, c);
 }
 
-char info (Arv* a) {
+unsigned char info (Arv* a) {
     return a->c;
 }
 
@@ -69,7 +69,7 @@ int altura (Arv* a) {
         return maior(altura(a->sae), altura(a->sad)) + 1;
 }
 
-Arv *arv_pai (Arv* a, char c) {
+Arv *arv_pai (Arv* a, unsigned char c) {
     if(arv_vazia(a))
         return NULL;
     if(info(a) == c)
@@ -97,7 +97,7 @@ int folhas (Arv* a) {
     return folhas(a->sae) + folhas(a->sad);
 }
 
-int ocorrencias (Arv* a, char c) {
+int ocorrencias (Arv* a, unsigned char c) {
     if(arv_vazia(a))
         return 0;
     if(info(a) == c)
