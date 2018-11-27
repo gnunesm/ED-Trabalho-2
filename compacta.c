@@ -5,6 +5,8 @@
 #include "lista.h"
 #include "bitmap.h"
 
+#define BIT_COUNT 15
+
 bitmap buffer;
 
 Arv *arv_huffman(char *filename) {
@@ -48,16 +50,18 @@ void preenche_tabela(bitmap *tabela, Arv *a, bitmap b) {
             }
         }
         else {
-            bitmap b2 = bitmapInit(8);
+            bitmap b2 = bitmapInit(BIT_COUNT);
             for (int i=0; i<bitmapGetLength(b); i++)
 		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
             bitmapAppendLeastSignificantBit(&b2, 0);
             preenche_tabela(tabela, get_sae(a), b2);
-            b2 = bitmapInit(8);
+            free(b2.contents);
+            b2 = bitmapInit(BIT_COUNT);
             for (int i=0; i<bitmapGetLength(b); i++)
 		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
             bitmapAppendLeastSignificantBit(&b2, 1);
             preenche_tabela(tabela, get_sad(a), b2);
+            free(b2.contents);
         }
     }
 }
@@ -67,11 +71,11 @@ FILE *iniciar_escrita(char *filename) {
 }
 
 void escreve_bit(unsigned char bit, FILE *fp) {
-    printf("tenta\n");
+    // printf("tenta\n");
     bitmapAppendLeastSignificantBit(&buffer, bit);
-    printf("consegue\n");
+    // printf("consegue\n");
     if(bitmapGetLength(buffer) == 8) {
-        printf("aqui\n");
+        // printf("aqui\n");
         fprintf(fp, "%c", buffer.contents[0]);
         buffer.contents[0] = 0x00;
         buffer.length = 0;
@@ -94,6 +98,7 @@ void insere_cabecalho(FILE *fp, Arv *a) {
             insere_cabecalho(fp, get_sad(a));
         }
     }
+  free(aux.contents);
 }
 
 void encerrar_escrita(FILE *fp) {
@@ -103,12 +108,20 @@ void encerrar_escrita(FILE *fp) {
     fclose(fp);
 }
 
+void freeTabela(bitmap* t){
+  for(int i=0;i<256;i++){
+    if(t[i].contents!=NULL)
+      free(t[i].contents);
+  }
+}
+
 int main(int argc, char** argv) {
-    
+
     buffer = bitmapInit(8);
 
     if(argc < 2) {
         printf("Erro: Nome do arquivo de entrada não especificado\n");
+        free(buffer.contents);
         return 1;
     }
 
@@ -117,9 +130,9 @@ int main(int argc, char** argv) {
     arv_imprime(huff);
 
     bitmap tabela[256];
-    bitmap aux = bitmapInit(8);
+    bitmap aux = bitmapInit(BIT_COUNT);
     for(int i=0; i<256; i++)
-        tabela[i] = bitmapInit(8);
+        tabela[i] = bitmapInit(BIT_COUNT);
     preenche_tabela(tabela, huff, aux);
 
     char *output_name = (char *)malloc(sizeof(char)*(strlen(argv[1])+2));
@@ -132,7 +145,7 @@ int main(int argc, char** argv) {
 
     FILE *in = fopen(argv[1], "rt");
     int c;
-    
+
     while ((c = fgetc(in)) != EOF) {
         for(int i=0; i<bitmapGetLength(tabela[c]); i++)
 		    escreve_bit(bitmapGetBit(tabela[c], i), out);
@@ -143,6 +156,12 @@ int main(int argc, char** argv) {
 
     encerrar_escrita(out);
     fclose(in);
+
+    freeTabela(tabela);
+    arv_libera(huff);
+    free(output_name);
+    free(aux.contents);
+    free(buffer.contents);
 
     return 0;
 }
