@@ -11,7 +11,7 @@ Arv *arv_huffman(char *filename) {
     int pesos[256] = { 0 };         // vetor de pesos (sugerido na Dica 1)
 
     FILE *fp;
-    char c;
+    int c;
     if((fp = fopen(filename, "rt")) == NULL) {
         printf("Erro na abertura do arquivo %s\n", filename);
         return NULL;
@@ -33,7 +33,7 @@ Arv *arv_huffman(char *filename) {
     while(!unico(lista_arvores)) {
         a1 = Pop(lista_arvores);
         a2 = Pop(lista_arvores);
-        nova = arv_cria((char)0, get_peso(a1)+get_peso(a2), a1, a2);
+        nova = arv_cria((unsigned char)0, get_peso(a1)+get_peso(a2), a1, a2);
         Insere_ordenado(nova, lista_arvores);
     }
     Libera(lista_arvores);
@@ -131,15 +131,15 @@ int main(int argc, char** argv) {
     insere_cabecalho(out, huff);
 
     FILE *in = fopen(argv[1], "rt");
-    char c;
+    int c;
     
     while ((c = fgetc(in)) != EOF) {
         for(int i=0; i<bitmapGetLength(tabela[c]); i++)
 		    escreve_bit(bitmapGetBit(tabela[c], i), out);
     }
 
-    for(int i=0; i<bitmapGetLength(tabela[254]); i++)
-		escreve_bit(bitmapGetBit(tabela[254], i), out);
+    for(int i=0; i<bitmapGetLength(tabela[7]); i++)
+		escreve_bit(bitmapGetBit(tabela[7], i), out);
 
     encerrar_escrita(out);
     fclose(in);
