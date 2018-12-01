@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "arvore.h"
 #include "bitmap.h"
 
@@ -18,7 +19,14 @@ int le_bit(FILE *fp) {
 }
 
 Arv *resgata_arvore(FILE *fp) {
-
+    if(le_bit(fp) == 0)
+        return arv_cria((unsigned char)0, 0, resgata_arvore(fp), resgata_arvore(fp));
+    int n = 0;
+    for(int i=0; i<8; i++) {
+        if(le_bit(fp) == 1)
+            n += pow(2, i);
+    }
+    return arv_cria((unsigned char) n, 0, resgata_arvore(fp), resgata_arvore(fp));
 }
 
 int main(int argc, char** argv) {
@@ -40,6 +48,10 @@ int main(int argc, char** argv) {
     }
 
     Arv *huff = resgata_arvore(fp);
+
+    arv_imprime (huff);
+
+    fclose(fp);
 
     return 0;
 }
