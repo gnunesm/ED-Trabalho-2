@@ -98,7 +98,7 @@ void insere_cabecalho(FILE *fp, Arv *a) {
             insere_cabecalho(fp, get_sad(a));
         }
     }
-  free(aux.contents);
+    free(aux.contents);
 }
 
 void encerrar_escrita(FILE *fp) {
@@ -134,15 +134,15 @@ int main(int argc, char** argv) {
     for(int i=0; i<256; i++)
         tabela[i] = bitmapInit(BIT_COUNT);
     preenche_tabela(tabela, huff, aux);
-
+    
     char *output_name = (char *)malloc(sizeof(char)*(strlen(argv[1])+2));
     strcpy(output_name, argv[1]);
     strcpy(output_name+strlen(argv[1])-3, "comp");
 
     FILE *out = iniciar_escrita(output_name);
-
+    
     insere_cabecalho(out, huff);
-
+    printf("aqui\n");
     FILE *in = fopen(argv[1], "rt");
     int c;
 
