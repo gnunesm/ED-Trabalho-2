@@ -9,7 +9,7 @@ unsigned int current_bit = 0;
 
 int le_bit(FILE *fp) {
     if(current_bit == 7)
-        buffer.contents = fgetc(fp);
+        buffer.contents[0] = fgetc(fp);
     int bit = (int) bitmapGetBit(buffer, current_bit);
     if(current_bit == 0)
         current_bit = 7;
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     if((fp = fopen(argv[1], "rb")) == NULL) {
         printf("Erro na abertura do arquivo %s\n", argv[1]);
-        return NULL;
+        return 1;
     }
 
     Arv *huff = resgata_arvore(fp);
