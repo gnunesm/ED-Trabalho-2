@@ -5,10 +5,17 @@
 #include "lista.h"
 #include "bitmap.h"
 
-#define BIT_COUNT 50
+#define BIT_COUNT 50    // altura máxima suportada para a árvore de Huffman
 
-bitmap buffer;
+bitmap buffer;          // buffer para acumular 8 bits antes da escrita no arquivo
 
+
+/* Função que contabiliza a frequência de todos os caracteres no arquivo de
+entrada e cria a árvore de Huffman.
+Argumentos: ponteiro para o arquivo a ser lido
+Retorno: ponteiro para a Árvore de Huffman derivada do arquivo
+Pré-condição: nenhuma
+Pós-condição: Árvore criada e já preenchida */
 Arv *arv_huffman(char *filename) {
     int pesos[256] = { 0 };         // vetor de pesos (sugerido na Dica 1)
 
@@ -42,40 +49,49 @@ Arv *arv_huffman(char *filename) {
     return nova;
 }
 
+/* Preenche recursivamente a tabela com os códigos binários da compressão de cada caracter existente
+no arquivo.
+Argumentos: ponteiro para o vetor de bitmaps e para a árvore de Huffman, bitmap auxiliar
+Retorno: nenhum
+Pré-condição: vetor tabela formado por bitmaps já inicializados
+Pós-condição: bitmaps do vetor nas posições equivalentes a cada caracter presente na árvore
+              estarão preenchidas com o código da compressão do caracter */
 void preenche_tabela(bitmap *tabela, Arv *a, bitmap b) {
     if(!arv_vazia(a)) {
-        if(folha(a)) {
+        if(folha(a)) {  // se encontra um nó folha, preenche a posição equivalente na tabela com o valor atual do bitmap auxiliar
             for (int i=0; i<bitmapGetLength(b); i++) {
 		        bitmapAppendLeastSignificantBit(tabela+info(a), bitmapGetBit(b, i));
             }
         }
-        else {
+        else {  // se o nó não é folha, ocorre recursão, nas sub-árvores da esquerda e direita
             bitmap b2 = bitmapInit(BIT_COUNT);
             for (int i=0; i<bitmapGetLength(b); i++)
 		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
-            bitmapAppendLeastSignificantBit(&b2, 0);
+            bitmapAppendLeastSignificantBit(&b2, 0);    // acrescenta 0 ao bitmap auxiliar antes de chamar a função à esquerda
             preenche_tabela(tabela, get_sae(a), b2);
             free(b2.contents);
             b2 = bitmapInit(BIT_COUNT);
             for (int i=0; i<bitmapGetLength(b); i++)
 		        bitmapAppendLeastSignificantBit(&b2, bitmapGetBit(b, i));
-            bitmapAppendLeastSignificantBit(&b2, 1);
+            bitmapAppendLeastSignificantBit(&b2, 1);    // acrescenta 1 ao bitmap auxiliar antes de chamar a função à direita
             preenche_tabela(tabela, get_sad(a), b2);
             free(b2.contents);
         }
     }
 }
 
+/* Abre o arquivo de saída para escrita
+Argumentos: nome do arquivo
+Retorno: ponteiro para o arquivo aberto
+Pré-condição: nenhuma
+Pós-condição: arquivo aberto para escrita */
 FILE *iniciar_escrita(char *filename) {
     return fopen(filename, "w");
 }
 
 void escreve_bit(unsigned char bit, FILE *fp) {
-    // printf("tenta\n");
     bitmapAppendLeastSignificantBit(&buffer, bit);
-    // printf("consegue\n");
     if(bitmapGetLength(buffer) == 8) {
-        // printf("aqui\n");
         fprintf(fp, "%c", buffer.contents[0]);
         buffer.contents[0] = 0x00;
         buffer.length = 0;
@@ -142,7 +158,6 @@ int main(int argc, char** argv) {
     FILE *out = iniciar_escrita(output_name);
     
     insere_cabecalho(out, huff);
-    printf("aqui\n");
     FILE *in = fopen(argv[1], "rt");
     int c;
 

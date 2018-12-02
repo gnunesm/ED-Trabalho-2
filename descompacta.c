@@ -20,9 +20,8 @@ int le_bit(FILE *fp) {
 }
 
 Arv *resgata_arvore(FILE *fp) {
-    // printf("uma vez\n");
     if(le_bit(fp) == 0)
-        return arv_cria((unsigned char)0, 5, resgata_arvore(fp), resgata_arvore(fp));  //faz a árvore espelhada (???)
+        return arv_cria((unsigned char)0, 5, resgata_arvore(fp), resgata_arvore(fp));
     int n = 0;
     for(int i=0; i<8; i++) {
         if(le_bit(fp) == 1)
@@ -80,8 +79,6 @@ int main(int argc, char** argv) {
         if(c != 7)
             fprintf(sd, "%c", c);
     }
-
-    printf("aqui\n");
 
     fclose(fp);
     fclose(sd);
