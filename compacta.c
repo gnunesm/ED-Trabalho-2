@@ -5,7 +5,7 @@
 #include "lista.h"
 #include "bitmap.h"
 
-#define BIT_COUNT 15
+#define BIT_COUNT 50
 
 bitmap buffer;
 
