@@ -61,7 +61,9 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    char *output_name = "descompactado.txt";
+    char *output_name = (char *)malloc(sizeof(char)*(strlen(argv[1])+1));
+    strcpy(output_name, argv[1]);
+    strcpy(output_name+strlen(argv[1])-3, "txt");
 
     if((sd = fopen(output_name, "w")) == NULL) {
         printf("Erro na abertura do arquivo %s\n", output_name);
