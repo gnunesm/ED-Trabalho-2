@@ -3,47 +3,124 @@
 
 typedef struct arv Arv;
 
-//Cria uma �rvore vazia
+/*Cria uma arvore vazia
+* inputs: nenhum
+* output: NULL
+* pre-condicao: nenhuma
+* pos-condicao: NULL retornado
+*/
 Arv* arv_criavazia (void);
 
-//cria uma �rvore com a informa��o do n� raiz c, e
-//com sub�rvore esquerda e e sub�rvore direita d
+/*Cria uma arvore vazia
+* inputs: caractere c, inteiro peso, sub-arvores esquerda e direita
+* output: no com as informacoes e sub-arvores criado
+* pre-condicao: nenhuma
+* pos-condicao: no alocado e informacoes guardadas
+*/
 Arv* arv_cria (unsigned char c, int peso, Arv* e, Arv* d);
 
-//libera o espa�o de mem�ria ocupado pela �rvore a
+/*Libera a memoria alocada para a arvore
+* inputs: arvore a
+* output: NULL
+* pre-condicao: arvore nao e nula
+* pos-condicao: memoria liberada e arvore apontando para NULL
+*/
 Arv* arv_libera (Arv* a);
 
-//retorna true se a �rvore estiver vazia e false 
-//caso contr�rio
+/*Verifica se uma arvore e vazia
+* inputs: arvore a
+* output: 1 caso arvore seja vazia, 0 caso contrario
+* pre-condicao: nenhuma
+* pos-condicao: inteiro retornado
+*/
 int arv_vazia (Arv* a);
 
-//indica a ocorr�ncia (1) ou n�o (0) do caracter c
+/*Verifica a ocorrencia do caractere c na arvore
+* inputs: arvore a, caractere c a ser verificado
+* output: 1 caso c exista na arv, 0 caso contrario
+* pre-condicao: arvore nao e nula
+* pos-condicao: inteiro retornado
+*/
 int arv_pertence (Arv* a, unsigned char c);
 
-//imprime as informa��es dos n�s da �rvore
+/*Imprime uma arvore
+* inputs: arvore a
+* output: nenhum
+* pre-condicao: arvore nao e nula
+* pos-condicao: arvore e nos impressos no stdout
+*/
 void arv_imprime (Arv* a);
 
-//retorna o pai de um dado no
+/*Retorna o pai de dado no que contenha o caractere c
+* inputs: arvore a, caractere c
+* output: no pai do no que contenha c
+* pre-condicao: arvore nao e nula
+* pos-condicao: no pai retornado
+*/
 Arv* arv_pai (Arv* a, unsigned char c);
 
-//retorna a quantidade de folhas de uma arvore binaria
+/*Conta a quantidade de folhas da arvore binaria
+* inputs: arvore a
+* output: numero de folhas
+* pre-condicao: arvore nao e nula
+* pos-condicao: inteiro com numero de folhas retornado
+*/
 int folhas (Arv* a);
 
-//retorna o numero de ocorrencias de um dado caracter na arvore 
+/*Conta as ocorrencias de determinado caractere na arvore
+* inputs: arvore a, caractere c
+* output: numero de ocorrencias do caractere c
+* pre-condicao: arvore nao e nula
+* pos-condicao: inteiro correspondente as ocorrencias retornado
+*/
 int ocorrencias (Arv* a, unsigned char c);
 
-//retorna o campo informacao de um dado no
+/*Retorna o campo que contem caractere do no
+* inputs: arvore a
+* output: caractere contido no no
+* pre-condicao: no nao e nulo
+* pos-condicao: caractere retornado
+*/
 unsigned char info (Arv* a);
 
+/*Retorna o campo que contem o peso do no
+* inputs: no/arvore a
+* output: inteiro contido no no
+* pre-condicao: no nao e nulo
+* pos-condicao: int peso retornado
+*/
 int get_peso (Arv *a);
 
-//retorna a altura da arvore
+/*Verifica altura de uma arvore
+* inputs: arvore a
+* output: altura da arvore
+* pre-condicao: arvore nao e nula
+* pos-condicao: inteiro altura retornado
+*/
 int altura (Arv* a);
 
+/*Verifica se dado no e um no folha
+* inputs: no/arvore a
+* output: 1 caso no seja folha, 0 caso contrario
+* pre-condicao: arvore nao e nula
+* pos-condicao: inteiro resposta retornado
+*/
 int folha(Arv *a);
 
+/*Retorna a sub-arvore esquerda de um no
+* inputs: no a
+* output: sub-arvore esquerda do no
+* pre-condicao: no nao e nulo
+* pos-condicao: sub-arvore retornada
+*/
 Arv *get_sae(Arv *a);
 
+/*Retorna a sub-arvore direita de um no
+* inputs: no a
+* output: sub-arvore direita do no
+* pre-condicao: no nao e nulo
+* pos-condicao: sub-arvore retornada
+*/
 Arv *get_sad(Arv *a);
 
 #endif /* ARVORE_H_ */
