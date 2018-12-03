@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
     if(argc < 2) {
         printf("Erro: Nome do arquivo de entrada não especificado\n");
-        // free(buffer.contents);
+        free(buffer.contents);
         return 1;
     }
 
@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
 
     if((fp = fopen(argv[1], "rb")) == NULL) {
         printf("Erro na abertura do arquivo %s\n", argv[1]);
+        free(buffer.contents);
         return 1;
     }
 
@@ -64,6 +65,7 @@ int main(int argc, char** argv) {
 
     if((sd = fopen(output_name, "w")) == NULL) {
         printf("Erro na abertura do arquivo %s\n", output_name);
+        free(buffer.contents);
         return 1;
     }
 
@@ -89,6 +91,8 @@ int main(int argc, char** argv) {
 
     fclose(fp);
     fclose(sd);
+    free(buffer.contents);
+    arv_libera(huff);
 
     return 0;
 }
