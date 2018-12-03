@@ -163,8 +163,6 @@ int main(int argc, char** argv) {
 
     Arv *huff = arv_huffman(argv[1]);
 
-    arv_imprime(huff);
-
     bitmap tabela[256];
     bitmap aux = bitmapInit(BIT_COUNT);
     for(int i=0; i<256; i++)

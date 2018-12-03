@@ -71,8 +71,6 @@ int main(int argc, char** argv) {
 
     Arv *huff = resgata_arvore(fp);
 
-    arv_imprime(huff);
-
     unsigned char c = 0;
     Arv *aux;
 
