@@ -1,5 +1,7 @@
-all:
-	gcc arvore.c bitmap.c compacta.c lista.c -Wall -o app
+all: compacta descompacta
+	
+compacta: compacta.c
+	gcc arvore.c bitmap.c compacta.c lista.c -Wall -o compacta
 
-run:
-	./app
+descompacta: descompacta.c
+	gcc arvore.c bitmap.c descompacta.c -lm -Wall -o descompacta
