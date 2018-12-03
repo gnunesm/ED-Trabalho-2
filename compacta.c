@@ -89,41 +89,61 @@ FILE *iniciar_escrita(char *filename) {
     return fopen(filename, "w");
 }
 
+/* Função de interface para escrever um bit no arquivo
+Argumentos: valor do bit, ponteiro para o arquivo
+Retorno: nenhum
+Pré-condição: arquivo já aberto para escrita
+Pós-condição: bit adicionado ao buffer. Buffer inserido no arquivo se completar 8 bits */
 void escreve_bit(unsigned char bit, FILE *fp) {
     bitmapAppendLeastSignificantBit(&buffer, bit);
     if(bitmapGetLength(buffer) == 8) {
         fprintf(fp, "%c", buffer.contents[0]);
-        buffer.contents[0] = 0x00;
+        buffer.contents[0] = 0x00;      // buffer é esvaziado após escrever no arquivo
         buffer.length = 0;
     }
 }
 
+/* Função que insere recursivamente no arquivo o cabeçalho que representa a árvore de Huffman
+Argumentos: ponteiros para o arquivo e para a árvore
+Retorno: nenhum
+Pré-condição: arquivo já aberto para escrita
+Pós-condição: cabeçalho inserido no arquivo */
 void insere_cabecalho(FILE *fp, Arv *a) {
     bitmap aux = bitmapInit(8);
     aux.length = 8;
     if(!arv_vazia(a)) {
         if(folha(a)) {
-            escreve_bit(1, fp);
+            escreve_bit(1, fp); // insere bit 1 se o nó for folha
             aux.contents[0] = info(a);
             for(int i=0; i<8; i++)
-                escreve_bit(bitmapGetBit(aux, i), fp);
+                escreve_bit(bitmapGetBit(aux, i), fp); // insere 8 bits que representam o caracter do nó
         }
         else {
-            escreve_bit(0, fp);
-            insere_cabecalho(fp, get_sae(a));
-            insere_cabecalho(fp, get_sad(a));
+            escreve_bit(0, fp); // insere bit zero se o nó não for folha
+            insere_cabecalho(fp, get_sae(a)); // recursão na sub-árvore da esquerda
+            insere_cabecalho(fp, get_sad(a)); // recursão na sub-árvore da direita
         }
     }
     free(aux.contents);
 }
 
+/* Função para encerrar a escrita do arquivo de saída
+Argumentos: ponteiro para o arquivo
+Retorno: nenhum
+Pré-condição: arquivo já aberto para escrita
+Pós-condição: último byte do arquivo completado com zeros e arquivo fechado */
 void encerrar_escrita(FILE *fp) {
-    int falta = 8 - bitmapGetLength(buffer);
+    int falta = 8 - bitmapGetLength(buffer); // quantidade de bits que faltam no buffer para completar 8
     for(int i=0; i<falta; i++)
-        escreve_bit(0, fp);
+        escreve_bit(0, fp); // insere bits 0 no buffer para completar 8 bits e escrever no arquivo
     fclose(fp);
 }
 
+/* Função para liberar a memória dos bitmaps da tabela de códigos
+Argumentos: ponteiro para a tabela
+Retorno: nenhum
+Pré-condição: tabela com os bitmaps inicializados
+Pós-condição: toda memória dos bitmaps da tabela liberada */
 void freeTabela(bitmap* t){
   for(int i=0;i<256;i++){
     if(t[i].contents!=NULL)

@@ -5,13 +5,19 @@
 #include "arvore.h"
 #include "bitmap.h"
 
-bitmap buffer;
-unsigned int current_bit = 7;
+bitmap buffer; // buffer que guarda o último byte lido do arquivo
+unsigned int current_bit = 7; // valor do próximo bit a ser lido no buffer
 
+/* Função de interface para ler um bit do arquivo
+Argumentos: ponteiro para o arquivo
+Retorno: valor do bit (0 ou 1)
+Pré-condição: arquivo já aberto para leitura
+Pós-condição: buffer atualizado caso o byte anterior já tivesse sido lido por completo */
 int le_bit(FILE *fp) {
     if(current_bit == 7)
-        buffer.contents[0] = fgetc(fp);
-    int bit = (int) bitmapGetBit(buffer, 7 - current_bit);
+        buffer.contents[0] = fgetc(fp); // armazena no buffer um novo byte, se o anterior tiver acabado
+    int bit = (int) bitmapGetBit(buffer, 7 - current_bit); // toma o valor do próximo bit ainda não lido
+    // Atualiza o valor do próximo bit a ser lido
     if(current_bit == 0)
         current_bit = 7;
     else
@@ -19,15 +25,21 @@ int le_bit(FILE *fp) {
     return bit;
 }
 
+/* Função que recria recursivamente a árvore de huffman a partir do cabeçalho do arquivo
+Argumentos: ponteiro para o arquivo
+Retorno: ponteiro para a árvore criada
+Pré-condição: arquivo já aberto para leitura
+Pós-condição: árvore de Huffman criada e preenchida */
 Arv *resgata_arvore(FILE *fp) {
-    if(le_bit(fp) == 0)
+    if(le_bit(fp) == 0) // se o bit é zero, cria nó não folha e, por recursão, suas sub-árvores
         return arv_cria((unsigned char)0, 5, resgata_arvore(fp), resgata_arvore(fp));
+    // se o bit for 1, calcula o valor do caracter pela soma de potências de 2
     int n = 0;
     for(int i=0; i<8; i++) {
         if(le_bit(fp) == 1)
             n += pow(2, 7-i);
     }
-    return arv_cria((unsigned char) n, 4, NULL, NULL);
+    return arv_cria((unsigned char) n, 4, NULL, NULL); // retorna nó folha criado
 }
 
 int main(int argc, char** argv) {
@@ -47,11 +59,6 @@ int main(int argc, char** argv) {
         printf("Erro na abertura do arquivo %s\n", argv[1]);
         return 1;
     }
-
-    // char *output_name = (char *)malloc(sizeof(char)*(strlen(argv[1])+2));
-    // strcpy(output_name, argv[1]);
-    // strcat(output_name, "2");
-    // strcpy(output_name+strlen(argv[1])-3, "txt");
 
     char *output_name = "descompactado.txt";
 
